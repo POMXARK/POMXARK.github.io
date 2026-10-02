@@ -128,6 +128,8 @@
   .job-desc{color:var(--ink-dim);font-size:15px;margin:9px 0 12px;max-width:600px;}
   .job-tags{display:flex;flex-wrap:wrap;gap:6px;}
   .tag{font-size:12px;color:var(--ink-dim);background:var(--bg-soft);border:1px solid var(--line);padding:4px 10px;border-radius:999px;}
+  .tag a,.proj-tag a{color:inherit;text-decoration:underline dotted;text-underline-offset:2px;}
+  .tag a:hover,.proj-tag a:hover{color:var(--accent);text-decoration-style:solid;}
   @media(max-width:600px){.job{grid-template-columns:1fr;gap:6px;}}
   .job.hidden{display:none;}
 
@@ -1143,6 +1145,80 @@
   projFilterBtns.forEach(btn => {
     btn.addEventListener('click', () => applyProjectFilter(btn.dataset.role));
   });
+
+  const TAG_DOCS = {
+    'php': 'https://www.php.net/manual/ru/',
+    'laravel': 'https://laravel.com/docs',
+    'laravel octane': 'https://laravel.com/docs/octane',
+    'symfony': 'https://symfony.com/doc/current/index.html',
+    'doctrine orm': 'https://www.doctrine-project.org/',
+    'composer': 'https://getcomposer.org/doc/',
+    'blade': 'https://laravel.com/docs/blade',
+    'python': 'https://docs.python.org/ru/3/',
+    'fastapi': 'https://fastapi.tiangolo.com/ru/',
+    'django': 'https://docs.djangoproject.com/',
+    'sqlalchemy': 'https://docs.sqlalchemy.org/',
+    'aio-pika': 'https://aio-pika.readthedocs.io/',
+    'flask': 'https://flask.palletsprojects.com/',
+    'go': 'https://go.dev/doc/',
+    'golang': 'https://go.dev/doc/',
+    'gorilla websocket': 'https://pkg.go.dev/github.com/gorilla/websocket',
+    'fyne': 'https://docs.fyne.io/',
+    'c#': 'https://learn.microsoft.com/ru-ru/dotnet/csharp/',
+    '.net': 'https://learn.microsoft.com/ru-ru/dotnet/',
+    'wpf': 'https://learn.microsoft.com/ru-ru/dotnet/desktop/wpf/',
+    'avalonia': 'https://docs.avaloniaui.net/',
+    'entity framework': 'https://learn.microsoft.com/ru-ru/ef/core/',
+    'sqlite': 'https://www.sqlite.org/docs.html',
+    'c++': 'https://en.cppreference.com/',
+    'directx': 'https://learn.microsoft.com/ru-ru/windows/win32/directx',
+    'directx9': 'https://learn.microsoft.com/ru-ru/windows/win32/directx',
+    'vue': 'https://ru.vuejs.org/guide/introduction.html',
+    'vue 3': 'https://ru.vuejs.org/guide/introduction.html',
+    'vue 2': 'https://v2.vuejs.org/v2/guide/',
+    'react': 'https://ru.react.dev/learn',
+    'svelte': 'https://svelte.dev/docs',
+    'gatsby': 'https://www.gatsbyjs.com/docs/',
+    'flutter': 'https://docs.flutter.dev/',
+    'node.js': 'https://nodejs.org/ru/docs',
+    'typescript': 'https://www.typescriptlang.org/docs/',
+    'javascript': 'https://developer.mozilla.org/ru/docs/Web/JavaScript',
+    'postgresql': 'https://postgrespro.ru/docs/postgresql/current/index',
+    'mysql': 'https://dev.mysql.com/doc/refman/8.0/en/',
+    'oracle': 'https://docs.oracle.com/en/database/',
+    'mongodb': 'https://www.mongodb.com/docs/',
+    'база данных mongodb': 'https://www.mongodb.com/docs/',
+    'redis': 'https://redis.io/docs/',
+    'docker': 'https://docs.docker.com/',
+    'rabbitmq': 'https://www.rabbitmq.com/docs',
+    'grpc': 'https://grpc.io/docs/',
+    'graphql': 'https://graphql.org/learn/',
+    'websocket': 'https://developer.mozilla.org/ru/docs/Web/API/WebSockets_API',
+    'wordpress': 'https://ru.wordpress.org/support/',
+    'strapi': 'https://docs.strapi.io/',
+    'minio': 'https://min.io/docs/minio/linux/index.html',
+    'jwt': 'https://jwt.io/introduction',
+    'opencv': 'https://docs.opencv.org/4.x/',
+    'tesseract': 'https://tesseract-ocr.github.io/tessdoc/',
+    'silero tts': 'https://github.com/snakers4/silero-models',
+    'pyqt5': 'https://www.riverbankcomputing.com/static/Docs/PyQt5/',
+    'p/invoke': 'https://learn.microsoft.com/ru-ru/dotnet/standard/native-interop/pinvoke',
+    'python wrapper': 'https://learn.microsoft.com/ru-ru/dotnet/standard/native-interop/pinvoke',
+    'npm': 'https://docs.npmjs.com/',
+  };
+
+  function linkifyTag(el){
+    const text = el.textContent.trim();
+    const parts = text.split(' / ').map(p => p.trim());
+    const htmlParts = parts.map(p => {
+      const url = TAG_DOCS[p.toLowerCase()];
+      return url ? `<a href="${url}" target="_blank" rel="noopener">${p}</a>` : p;
+    });
+    if (htmlParts.some((p, i) => p !== parts[i])) {
+      el.innerHTML = htmlParts.join(' / ');
+    }
+  }
+  document.querySelectorAll('.tag, .proj-tag').forEach(linkifyTag);
 
   const menuToggle = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
