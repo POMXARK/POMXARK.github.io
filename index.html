@@ -1087,16 +1087,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  const allRoleBtns = document.querySelectorAll('.role-btn');
+  const roleBtns = document.querySelectorAll('.pickbox .role-btn, #exp-filters .role-btn');
   const jobs = document.querySelectorAll('#experience-timeline .job');
-  const cards = document.querySelectorAll('#project-carousel .swiper-slide');
   const experienceEmpty = document.getElementById('experience-empty');
-  const projectsEmpty = document.getElementById('projects-empty');
   const techCards = document.querySelectorAll('.tech-card');
   const techEmpty = document.getElementById('tech-empty');
 
   function applyRole(role, scrollTarget){
-    allRoleBtns.forEach(b => b.classList.toggle('active', b.dataset.role === role));
+    roleBtns.forEach(b => b.classList.toggle('active', b.dataset.role === role));
 
     let visibleJobs = 0;
     jobs.forEach(job => {
@@ -1106,15 +1104,6 @@
       if (show) visibleJobs++;
     });
     experienceEmpty.style.display = visibleJobs === 0 ? 'block' : 'none';
-
-    let visibleCards = 0;
-    cards.forEach(card => {
-      const show = role === 'all' || card.dataset.cat === role;
-      card.classList.toggle('hidden', !show);
-      if (show) visibleCards++;
-    });
-    projectsEmpty.style.display = visibleCards === 0 ? 'block' : 'none';
-    if (projSwiper) { projSwiper.update(); projSwiper.slideTo(0); }
 
     let visibleTech = 0;
     techCards.forEach(card => {
@@ -1130,8 +1119,29 @@
     }
   }
 
-  allRoleBtns.forEach(btn => {
+  roleBtns.forEach(btn => {
     btn.addEventListener('click', () => applyRole(btn.dataset.role, btn.dataset.scroll));
+  });
+
+  const projFilterBtns = document.querySelectorAll('#proj-filters .role-btn');
+  const cards = document.querySelectorAll('#project-carousel .swiper-slide');
+  const projectsEmpty = document.getElementById('projects-empty');
+
+  function applyProjectFilter(cat){
+    projFilterBtns.forEach(b => b.classList.toggle('active', b.dataset.role === cat));
+
+    let visibleCards = 0;
+    cards.forEach(card => {
+      const show = cat === 'all' || card.dataset.cat === cat;
+      card.classList.toggle('hidden', !show);
+      if (show) visibleCards++;
+    });
+    projectsEmpty.style.display = visibleCards === 0 ? 'block' : 'none';
+    if (projSwiper) { projSwiper.update(); projSwiper.slideTo(0); }
+  }
+
+  projFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => applyProjectFilter(btn.dataset.role));
   });
 
   const menuToggle = document.getElementById('menu-toggle');
