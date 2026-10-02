@@ -1067,6 +1067,7 @@
       <div class="tech-card" data-roles="all"><div class="tech-head"><img class="tech-icon" src="https://cdn.simpleicons.org/docker/2496ED" alt="" loading="lazy" onerror="this.remove()"><div class="tech-name">Docker</div></div><div class="tech-desc">Инструмент, который упаковывает приложение так, чтобы оно одинаково работало на любом сервере.</div><a class="tech-link" href="https://docs.docker.com/" target="_blank" rel="noopener">Документация →</a></div>
       <div class="tech-card" data-roles="frontend"><div class="tech-head"><img class="tech-icon" src="https://cdn.simpleicons.org/wordpress/21759B" alt="" loading="lazy" onerror="this.remove()"><div class="tech-name">WordPress</div></div><div class="tech-desc">Самая распространённая в мире система управления контентом сайтов.</div><a class="tech-link" href="https://developer.wordpress.org/" target="_blank" rel="noopener">Документация →</a></div>
       <div class="tech-card" data-roles="frontend"><div class="tech-head"><img class="tech-icon" src="https://cdn.simpleicons.org/strapi/4945FF" alt="" loading="lazy" onerror="this.remove()"><div class="tech-name">Strapi</div></div><div class="tech-desc">Система управления контентом с открытым кодом для гибкого наполнения сайтов.</div><a class="tech-link" href="https://docs.strapi.io/" target="_blank" rel="noopener">Документация →</a></div>
+      <div class="tech-card" data-roles="frontend"><div class="tech-head"><img class="tech-icon" src="https://cdn.simpleicons.org/modx/000000" alt="" loading="lazy" onerror="this.remove()"><div class="tech-name">MODX</div></div><div class="tech-desc">Гибкая CMS на PHP с собственной шаблонизацией — программировал сайты на её основе.</div><a class="tech-link" href="https://docs.modx.com/" target="_blank" rel="noopener">Документация →</a></div>
     </div>
     <p class="empty-note" id="tech-empty" style="display:none;">Для этой роли отдельных технологий не выделено — смотрите общий список.</p>
   </section>
@@ -1180,6 +1181,8 @@
   roleBtns.forEach(btn => {
     btn.addEventListener('click', () => applyRole(btn.dataset.role, btn.dataset.scroll));
   });
+
+  filterTech('all');
 
   const projFilterBtns = document.querySelectorAll('#proj-filters .role-btn');
   const cards = document.querySelectorAll('#project-carousel .swiper-slide');
