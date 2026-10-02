@@ -197,6 +197,8 @@
   .callout p{margin:0;color:var(--ink-dim);font-size:14.5px;max-width:440px;}
 
   .tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .tech-group-title{grid-column:1/-1;font-size:12.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin:20px 0 -2px;}
+  .tech-group-title:first-child{margin-top:0;}
   .tech-card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;transition:border-color .15s,box-shadow .15s;}
   .tech-card:hover{border-color:var(--accent);box-shadow:0 10px 22px -16px rgba(19,21,31,.3);}
   .tech-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
@@ -1101,8 +1103,60 @@
   const roleBtns = document.querySelectorAll('.pickbox .role-btn, #exp-filters .role-btn');
   const jobs = document.querySelectorAll('#experience-timeline .job');
   const experienceEmpty = document.getElementById('experience-empty');
+  const techGrid = document.querySelector('.tech-grid');
   const techCards = document.querySelectorAll('.tech-card');
   const techEmpty = document.getElementById('tech-empty');
+
+  const TECH_GROUPS = [
+    ['php', 'PHP'],
+    ['python', 'Python'],
+    ['go', 'Go'],
+    ['csharp', 'C# / .NET'],
+    ['cpp', 'C++'],
+    ['node', 'Node.js'],
+    ['frontend', 'Frontend'],
+    ['mobile', 'Мобильная разработка'],
+    ['common', 'Общее'],
+  ];
+
+  function techGroupOf(card){
+    const roles = (card.dataset.roles || '').trim().split(/\s+/);
+    if (roles.length > 1 || roles[0] === 'all') return 'common';
+    return roles[0];
+  }
+
+  techGrid.querySelectorAll('.tech-group-title').forEach(el => el.remove());
+  const techGroupTitles = {};
+  TECH_GROUPS.forEach(([key, label], i) => {
+    const el = document.createElement('div');
+    el.className = 'tech-group-title';
+    el.dataset.group = key;
+    el.textContent = label;
+    el.style.order = i * 10;
+    el.style.display = 'none';
+    techGrid.appendChild(el);
+    techGroupTitles[key] = el;
+  });
+  techCards.forEach(card => {
+    const groupIndex = TECH_GROUPS.findIndex(([key]) => key === techGroupOf(card));
+    card.style.order = groupIndex * 10 + 1;
+  });
+
+  function filterTech(role){
+    const grouped = role === 'all';
+    let visibleTech = 0;
+    techCards.forEach(card => {
+      const roles = (card.dataset.roles || '').split(' ');
+      const show = grouped || roles.includes('all') || roles.includes(role);
+      card.classList.toggle('hidden', !show);
+      if (show) visibleTech++;
+    });
+    TECH_GROUPS.forEach(([key]) => {
+      const hasVisible = grouped && Array.from(techCards).some(card => !card.classList.contains('hidden') && techGroupOf(card) === key);
+      techGroupTitles[key].style.display = hasVisible ? '' : 'none';
+    });
+    techEmpty.style.display = visibleTech === 0 ? 'block' : 'none';
+  }
 
   function applyRole(role, scrollTarget){
     roleBtns.forEach(b => b.classList.toggle('active', b.dataset.role === role));
@@ -1116,14 +1170,7 @@
     });
     experienceEmpty.style.display = visibleJobs === 0 ? 'block' : 'none';
 
-    let visibleTech = 0;
-    techCards.forEach(card => {
-      const roles = (card.dataset.roles || '').split(' ');
-      const show = role === 'all' || roles.includes('all') || roles.includes(role);
-      card.classList.toggle('hidden', !show);
-      if (show) visibleTech++;
-    });
-    techEmpty.style.display = visibleTech === 0 ? 'block' : 'none';
+    filterTech(role);
 
     if (scrollTarget) {
       document.getElementById(scrollTarget).scrollIntoView({behavior:'smooth', block:'start'});
@@ -1149,6 +1196,8 @@
     });
     projectsEmpty.style.display = visibleCards === 0 ? 'block' : 'none';
     if (projSwiper) { projSwiper.update(); projSwiper.slideTo(0); }
+
+    filterTech(cat);
   }
 
   projFilterBtns.forEach(btn => {
